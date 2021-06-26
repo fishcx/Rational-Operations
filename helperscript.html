@@ -1,0 +1,142 @@
+<script>
+    // removes all double signs
+    function doublesigns(string){
+       return string.replaceAll("-+", "-").replaceAll("- +", "-").replaceAll("+ -", "-").replaceAll("- -", "+").replaceAll("+-", "-").replaceAll("-- ", "+");
+    }
+    
+    // function to replace all occurences of a string
+    String.prototype.replaceAll = function(searchStr, replaceStr) {
+	   var str = this;
+       // no match exists in string?
+       if(str.indexOf(searchStr) === -1) {
+          // return string
+          return str;
+       }
+      // replace and remove first match, and do another recursirve search/replace
+       return (str.replace(searchStr, replaceStr)).replaceAll(searchStr, replaceStr);
+    }
+    
+    // random integer between and including min and max
+	function random(min, max, rational) {
+         var random;
+         if ( rational ) {
+            random = randomDec( min, max, 1 );
+        } else {
+            random = Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+        }
+        return random;
+    } 
+    
+    // random non-zero integer bewteen min and max
+    function non_zero_random(min, max, rational) {
+         var output;
+          
+         if ( rational ) {
+            do{output = randomDec( min, max, 1 );} while (output ==0);
+         } else {
+            do{output = Math.floor(Math.random() * (max - min + 1) ) + min;} while (output === 0); 
+         }
+         
+         return output;
+    } 
+    
+    function randomDec(min, max, decimalPlaces) {  
+        var rand = Math.random()*(max-min) + min;
+        var power = Math.pow(10, decimalPlaces);
+        var output = formatDec((Math.floor(rand*power) / power));
+
+        return output;
+    }
+    
+    function decToFrac(dec){
+        
+        var decimal = formatDec(dec);
+        var isNegative = false;
+        
+        // take negative sign out for now
+        if(decimal < 0){ isNegative = true; decimal = -1*decimal; }
+        
+        var decPiece = formatDec(decimal-Math.floor(decimal));
+        var whole = Math.floor(decimal);
+        
+        // add negative sign back in
+        var output = "";
+
+        if(whole != 0){ output += whole}
+        
+        // this is needed for floating point errors when mutliplying decimals
+        var num = formatDec(decPiece*Math.pow(10,decimal.countDecimals()));
+        
+        if(decPiece != 0){ output += simplifyFrac(num,Math.pow(10,decimal.countDecimals()));}
+        
+        if(isNegative){ output = "-"+output;}
+        
+        return output;
+       
+    }
+    
+    // half the time make decimal into mixed number
+    function halfConvert(dec){
+       
+       var output = dec;
+       if(random(0,1) == 1){ output = decToFrac(dec); }
+       return output;
+    
+    }
+    
+    Number.prototype.countDecimals = function () {
+    if(Math.floor(this.valueOf()) === this.valueOf()) return 0;
+    return this.toString().split(".")[1].length || 0; 
+}
+    
+    // GCD of two values
+    function gcd(x, y) {
+      if ((typeof x !== 'number') || (typeof y !== 'number')) 
+        return false;
+        
+        x = Math.abs(x);
+        y = Math.abs(y);
+       while(y) {
+          var t = y;
+          y = x % y;
+          x = t;
+        }
+       return x;
+  } 
+
+   // use this for complicated calculations to format the decimal correctly for floating point errors
+   function formatDec(a){
+   
+     return Math.round(a*100000)/100000;
+   
+   }
+
+// simplify fraction
+    function simplifyFrac(num, denom){
+     
+     // format the negative better so that it isn't in a fraction
+     var neg = "";
+     if((num/denom) < 0){
+        
+        num = Math.abs(num);
+        denom = Math.abs(denom);
+        neg = "-";
+        
+     }
+       // if integer, return integer
+       if((num % denom) === 0){
+       
+         return neg+num/denom;
+         
+       }
+       // otherwise, return fraction in simplest form
+       else{
+            var g = gcd(num,denom);
+            return neg+"\\frac{"+(num/g)+"}{"+(denom/g)+"}";
+        }
+      
+    }
+
+</script>
+
+

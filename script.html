@@ -1,0 +1,385 @@
+<script>
+	$(document).ready(function() {
+    
+    $('.changeItem').change(function(){
+        $('#generate').click();
+    });
+
+    $(document).keypress(function (e) {
+        var key = e.which;
+         if(key == 13)  // the enter key code
+         {
+            $('#generate').click();
+             return false;  
+          }
+    });
+    
+    $('#video-button').hide();
+    
+    var testing = false;
+   $('#generate').click(function(){
+        if(!testing){$("#answer").hide(); $("#show-answer").val("Show Answer");}
+        
+        // default option is integers
+        var rat = false;
+        
+        // otherwise use decimals
+        if($("#dec-toggle").is(':checked')){   rat = true; }
+
+        var type;
+        // handles the formatting for selecting any type
+        if($("#type").val()=="any"){type = random(1,7);}
+        else{type = parseInt($("#type").val())}
+
+        generate(type,rat);       
+     });
+
+
+    $("#show-answer").click(function(){
+       if($("#answer").is(":hidden") ){
+          $("#answer").show();
+          $("#show-answer").val("Hide Answer");
+       } else{
+         $("#answer").hide();
+         $("#show-answer").val("Show Answer");
+        }
+    });
+    
+    if(testing){ $("#answer").show();}
+     
+    
+	});
+	function generate(type,rat){
+  
+       var problem = "";
+       var answer = "";
+       var a,b,c,d,e,f,g,h;
+       $("#generated").html("");
+       $("#answer").html("");
+       
+       // all operations
+       if(type == 3){
+          
+          type = random(1,2);
+          
+       }
+       
+       var videoLinks = ["https://www.youtube.com/watch?v=vzYSN3J24jc",       
+                         "https://www.youtube.com/watch?v=etNQwqrkHO8",
+                         "", // no video for all operations. Use appropriate video from case 1 and 2
+                         "https://www.youtube.com/watch?v=wC31qAcBYd4",
+                         "https://www.youtube.com/watch?v=6gWITmkizyc",
+                         "https://www.youtube.com/watch?v=FMrde328-gY",
+                         "https://www.youtube.com/watch?v=XZRNY57wB6c"];
+       
+       if(videoLinks[type-1].length != 0){ 
+         $("#videoLink"). attr("href", videoLinks[type-1]);
+         $('#video-button').show();
+       }
+       else{
+         $('#video-button').hide();
+       }
+       
+       switch(type) {
+           // Adding and Subtracting
+           case 1: 
+           a = produceAddSubtract(2,rat); // two numbers
+           problem = a[0];
+           answer = a[1];
+           break;
+           
+           // Adding and Subtracting Multiple Numbers
+           case 7:
+           a = produceAddSubtract(random(3,8),rat); // three to eight numbers
+           problem = a[0];
+           answer = a[1];           
+           break;
+           
+           // Multiplying and Dividing
+           case 2:
+           a = produceMultDiv(rat);
+           problem = a[0];
+           answer = a[1];
+           break;
+		             
+           // Order of Operations (Easy)
+           case 4: 
+           a = non_zero_random(-6,6,rat);
+           b = non_zero_random(-6,6,rat);
+           c = non_zero_random(-6,6,rat);
+           d = non_zero_random(-6,6,rat);
+           var aPrint = a; var bPrint = b; var cPrint = c; var dPrint = d;
+           if(rat){  aPrint = halfConvert(a); bPrint = halfConvert(b); cPrint = halfConvert(c); dPrint = halfConvert(d);}
+           
+           switch(random(0,4)){
+           
+              case 0:
+              problem = doublesigns("\\("+aPrint+" + "+bPrint+" \\cdot "+cPrint+" \\cdot "+dPrint+"\\)");
+              answer = formatDec(a+b*c*d);
+              break;
+
+              case 1:
+              problem = doublesigns("\\("+aPrint+" + "+bPrint+" \\cdot ("+cPrint+" + "+dPrint+")\\)");
+              answer = formatDec(a+b*(c+d));
+              break;
+              
+              case 2:
+              problem = doublesigns("\\("+aPrint+" \\cdot ("+bPrint+" + "+cPrint+" + "+dPrint+")\\)");
+              answer = formatDec(a*(b+c+d));
+              break;
+              
+              case 3:
+              problem = doublesigns("\\(("+aPrint+" + "+bPrint+") \\cdot "+cPrint+" + "+dPrint+"\\)");
+              answer = formatDec((a+b)*c+d);
+              break;
+              
+              case 4:
+              problem = doublesigns("\\("+aPrint+" - "+bPrint+"\\cdot"+cPrint+" + "+dPrint+"\\)");
+              answer = formatDec(a-b*c+d);
+              break;
+           }
+           break;
+		   
+           // Order of Operations (Medium)
+           case 5:
+           a = non_zero_random(-3,3,rat);
+           b = non_zero_random(-3,3,rat);
+           var ab = formatDec(a*b);
+           c = non_zero_random(-5,5,rat);
+           d = formatDec(c+b);
+           e = non_zero_random(-8,8,rat);
+           
+           var abPrint = ab; var aPrint = a; var bPrint = b; var cPrint = c; var dPrint = d; var ePrint = e;
+           if(rat){  abPrint = halfConvert(ab); aPrint = halfConvert(a); bPrint = halfConvert(b); cPrint = halfConvert(c); dPrint = halfConvert(d); ePrint = halfConvert(e);}
+            
+           switch(random(0,5)){
+           
+              case 0: 
+              problem = doublesigns("\\("+abPrint+"\\div ("+dPrint+" - "+cPrint+") \\cdot ("+aPrint+" + "+ePrint+")\\)");
+              answer = formatDec((ab/(d-c))*(a+e));
+              break;
+              
+              case 1:
+              problem = doublesigns("\\("+cPrint+"\\cdot ("+abPrint+"\\div "+bPrint+" - "+dPrint+" + "+ePrint+")\\)");
+              answer = formatDec(c*(ab/b-d+e));
+              break;
+              
+              case 2:
+              problem = doublesigns("\\(("+abPrint+" \\div "+aPrint+") \\cdot "+cPrint+" - "+ePrint+" + ("+aPrint+")^2\\)");
+              answer = formatDec(b*c-e+a**2);
+              break;
+              
+              case 3:
+              problem = doublesigns("\\("+ePrint+"\\cdot("+abPrint+" \\div "+aPrint+") \\cdot ("+aPrint+")^2 - "+ePrint+"\\)");
+              answer = formatDec(e*b*a**2-e);
+              break;
+                         
+              case 4:
+              problem = doublesigns("\\("+aPrint+" - "+ePrint+"("+cPrint+" + "+abPrint+"\\div "+bPrint+")\\)");
+              answer = formatDec(a-e*(c+a));
+              break;
+              
+              case 5:
+              problem = doublesigns("\\("+ePrint+" + "+cPrint+"\\cdot"+bPrint+" - ("+aPrint+" + "+dPrint+")\\)");
+              answer = formatDec(e+c*b-(a+d));
+              break;
+              
+           }
+           
+           break;
+           
+           // Order of Operations (Hard)
+           case 6:
+           do{
+           a = non_zero_random(-3,3,rat);
+           b = non_zero_random(-3,3,rat);
+           var ab = formatDec(a*b);
+           c = non_zero_random(-8,-2,rat);
+           d = formatDec(c+b);
+           e = non_zero_random(-8,8,rat);
+           
+           f = random(2,10,rat);
+           g = random(-10,-2,rat);           
+           } while (d == 0); // can't divide by 0 for case 2
+           
+           var abPrint = ab; var aPrint = a; var bPrint = b; var cPrint = c; var dPrint = d; var ePrint = e; var fPrint = f; var gPrint = g;
+           if(rat){  abPrint = halfConvert(ab); aPrint = halfConvert(a); bPrint = halfConvert(b); cPrint = halfConvert(c); dPrint = halfConvert(d); ePrint = halfConvert(e); fPrint = halfConvert(f); gPrint = halfConvert(g);}
+
+           switch(random(0,3)){
+           
+              case 0: 
+              problem = doublesigns("\\(("+cPrint+")^2 - "+ePrint+"\\cdot ["+abPrint+"\\div ("+dPrint+" - "+cPrint+")]\\cdot "+aPrint+"\\)");
+              answer = formatDec((c*c)-e*(ab/(d-c))*a);
+              break;
+              
+              case 1: 
+              problem = doublesigns("\\((("+gPrint+") + "+ePrint+" + "+fPrint+")^2 \\cdot ("+abPrint+"\\div "+aPrint+")^2\\)");
+              answer = formatDec((g+e+f)**2*(ab/a)**2);
+              break;
+              
+              case 2:
+              problem = doublesigns("\\([("+cPrint+" + "+bPrint+")^2 \\div "+dPrint+"]\\cdot ("+aPrint+" - "+fPrint+" + "+ePrint+")\\)");
+              answer = formatDec(d*(a-f+e));
+              break;
+              
+              case 3:
+              problem = doublesigns("\\("+ePrint+" - ["+aPrint+" + "+bPrint+"("+cPrint+") - "+dPrint+" - (("+fPrint+")^2 - "+fPrint+"("+gPrint+"))]\\)");
+              answer = formatDec(e-(a+b*c-d-(f**2-f*g)));
+              break;
+ 
+           }
+           break;
+       }
+            
+       $("#generated").html("<br>"+problem);
+
+       var ansOut = "";
+       if(rat  && (answer.toString() != decToFrac(answer))){ansOut = "\\("+answer+"\\) or \\("+decToFrac(answer)+"\\)";}else{ ansOut = "\\("+answer+"\\)";}
+       
+       $("#answer").html(doublesigns(ansOut));
+       renderMathInElement(document.body);
+	}
+	
+    // helper function for adding and subtracting
+    function produceAddSubtract(terms,rat){
+       
+       var a = non_zero_random(-10,10,rat);
+       var b = 0;
+       var aPrint = a;
+       
+       var output = [];
+       var answer = a;
+       if(rat){  aPrint = halfConvert(a);} 
+       output[0] = "\\("+aPrint;
+
+       // allows for more than just two numbers
+       for(var i = terms-1;  i > 0; i--){
+        
+        // forces at least one negative
+        if(a > 0){
+        
+           b = random(-10,-1,rat);
+           
+        } else {
+        
+           b = non_zero_random(-10,10,rat);
+        
+        }
+        
+        var bPrint = b;
+        
+        if(rat){  bPrint = halfConvert(b);} 
+
+        
+          switch(random(0,1)){
+           
+              // add
+              case 0:
+              output[0] += " + "+bPrint;
+              answer += b;
+              break;
+           
+              // subtract
+              case 1:
+              output[0] += " - "+bPrint;
+              answer -= b;
+              break;
+           }
+        
+        }
+        output[0] += "\\)";
+        output[1] = formatDec(answer);
+        
+       return output;
+    }
+    
+    // helper function for multiplying and dividing
+    function produceMultDiv(rat){
+       
+       var a = random(-10,-2,rat); // forces a negative, avoids -1
+       do{var b = non_zero_random(-10,10,rat);} while(b==1 || b == -1); // avoids times 1 and -1
+       var c = formatDec(a*b);
+       var output = [];
+       
+       var aPrint = a;
+       var bPrint = b;
+       if(rat){  aPrint = halfConvert(a); bPrint = halfConvert(b);}
+       
+       switch(random(0,3)){
+           
+           case 0: 
+           output[0] = "\\("+aPrint+" \\cdot "+bPrint+"\\)";
+           output[1] = c;
+           break;
+           
+           case 1: 
+           output[0] = "\\("+bPrint+" \\cdot "+aPrint+"\\)";
+           output[1] = c;
+           break;
+
+           case 2:
+           output[0] = "\\("+c+" \\div "+bPrint+"\\)";
+           output[1] = a;
+           break;
+           
+           case 3:
+           output[0] = "\\("+c+" \\div "+aPrint+"\\)";
+           output[1] = b;
+           break;
+        }
+       return output;
+    }
+    /*
+    // removes all double signs
+    function doublesigns(string){
+       return string.replaceAll("-+", "-").replaceAll("- +", "-").replaceAll("+ -", "-").replaceAll("- -", "+").replaceAll("+-", "-").replaceAll("-- ", "+");
+    }
+    
+    String.prototype.replaceAll = function(searchStr, replaceStr) {
+	   var str = this;
+       // no match exists in string?
+       if(str.indexOf(searchStr) === -1) {
+          // return string
+          return str;
+       }
+      // replace and remove first match, and do another recursirve search/replace
+       return (str.replace(searchStr, replaceStr)).replaceAll(searchStr, replaceStr);
+    }
+    
+    // random integer between and including min and max
+	function random(min, max, rational) {
+         var random;
+         if ( rational ) {
+            random = randomDec( min, max, 1 );
+        } else {
+            random = Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+        }
+        return random;
+    } 
+    
+    // random non-zero integer bewteen min and max
+    function non_zero_random(min, max, rational) {
+         var output;
+          
+         if ( rational ) {
+            do{output = randomDec( min, max, 1 );} while (output ==0);
+         } else {
+            do{output = Math.floor(Math.random() * (max - min + 1) ) + min;} while (output === 0); 
+         }
+         
+         return output;
+    } 
+    
+    function randomDec(min, max, decimalPlaces) {  
+        var rand = Math.random()*(max-min) + min;
+        var power = Math.pow(10, decimalPlaces);
+        return Math.floor(rand*power) / power;
+    } 
+    
+    // use this for compplicated calculations to format the decimal correctly for floating point errors
+   function formatDec(a){
+   
+     return Math.round(a*10000)/10000;
+   
+   } */
+</script>
