@@ -148,7 +148,7 @@
            var ab = formatDec(a*b);
            c = non_zero_random(-5,5,rat);
            d = formatDec(c+b);
-           e = non_zero_random(-8,8,rat);
+           e = non_zero_random(-8,-2,rat);
            f = non_zero_random(-5,5,rat);
 
            var abPrint = ab; var aPrint = a; var bPrint = b; var cPrint = c; var dPrint = d; var ePrint = e; var fPrint = f;
@@ -157,9 +157,9 @@
            switch(random(0,5)){
               
               case 0:
-              problem = doublesigns("\\(("+abPrint+" \\div "+aPrint+") \\cdot "+cPrint+" - "+ePrint+" + ("+fPrint+")^2\\)");
-              answer = formatDec(b*c-e+f**2);
-              break;
+              problem = doublesigns("\\("+ePrint+"+"+"("+abPrint+" \\div "+aPrint+") \\cdot "+cPrint+" + ("+fPrint+")^2\\)");
+              answer = formatDec(e+b*c+f**2);
+             break;
               
               case 1:
               problem = doublesigns("\\("+ePrint+"\\cdot("+abPrint+" \\div "+aPrint+") \\cdot ("+aPrint+")^2 - "+ePrint+"\\)");
@@ -167,8 +167,8 @@
               break;
               
               case 2:
-              problem = doublesigns("\\("+ePrint+" + "+cPrint+"\\cdot"+bPrint+" - ("+aPrint+" + "+dPrint+")\\)");
-              answer = formatDec(e+c*b-(a+d));
+              problem = doublesigns("\\(("+ePrint+")^2 + "+cPrint+"\\cdot"+bPrint+" - ("+aPrint+" + "+dPrint+")\\)");
+              answer = formatDec(e**2+c*b-(a+d));
               break;
 
               case 3:
@@ -182,8 +182,8 @@
               break;
               
               case 5:
-              problem = doublesigns("\\(("+fPrint+")^2 - "+ePrint+" + ("+abPrint+" \\div "+aPrint+") \\cdot "+cPrint+" \\)");
-              answer = formatDec(b*c-e+f**2);
+              problem = doublesigns("\\(("+ePrint+")^2 - "+fPrint+" + ("+abPrint+" \\div "+aPrint+") \\cdot "+cPrint+" \\)");
+              answer = formatDec(b*c-f+e**2);
               break;
               
            }
