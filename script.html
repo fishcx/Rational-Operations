@@ -210,23 +210,23 @@
            switch(random(0,3)){
            
               case 0: 
-              problem = doublesigns("\\(("+cPrint+")^2 - "+ePrint+"\\cdot ["+abPrint+"\\div ("+dPrint+" - "+cPrint+")]\\cdot "+aPrint+"\\)");
-              answer = formatDec((c*c)-e*(ab/(d-c))*a);
+              problem = doublesigns("\\(("+cPrint+")^2 - "+ePrint+"\\cdot ["+cPrint+" + "+abPrint+"\\div ("+dPrint+" - "+cPrint+")]+ "+aPrint+"\\)");
+              answer = formatDec((c*c)-e*(c+ab/(d-c))+a);
               break;
               
               case 1: 
-              problem = doublesigns("\\((("+gPrint+") + "+ePrint+" + "+fPrint+")^2 \\cdot ("+abPrint+"\\div "+aPrint+")^2\\)");
-              answer = formatDec((g+e+f)**2*(ab/a)**2);
+              problem = doublesigns("\\(("+bPrint+" + "+ePrint+" \\cdot "+fPrint+")^2 + "+cPrint+"+ ("+abPrint+"\\div "+aPrint+")^3\\)");
+              answer = formatDec((b+e*f)**2+c+Math.pow((ab/a),3));
               break;
               
               case 2:
-              problem = doublesigns("\\([("+cPrint+" + "+bPrint+")^2 \\div "+dPrint+"]\\cdot ("+aPrint+" - "+fPrint+" + "+ePrint+")\\)");
-              answer = formatDec(d*(a-f+e));
+              problem = doublesigns("\\([("+cPrint+" + "+bPrint+")^2 \\div "+dPrint+"] + ("+aPrint+" - "+fPrint+" \\cdot "+ePrint+")\\)");
+              answer = formatDec(d+(a-f*e));
               break;
               
               case 3:
-              problem = doublesigns("\\("+ePrint+" - ["+aPrint+" + "+bPrint+"("+cPrint+") - "+dPrint+" - (("+fPrint+")^2 - "+fPrint+"("+gPrint+"))]\\)");
-              answer = formatDec(e-(a+b*c-d-(f**2-f*g)));
+              problem = doublesigns("\\("+ePrint+" - ["+abPrint+"\\div"+bPrint+" - "+dPrint+" - (("+cPrint+")^2 - "+fPrint+"\\cdot("+gPrint+"))+ "+fPrint+"]\\)");
+              answer = formatDec(e-(f+a-d-(c**2-f*g)));
               break;
  
            }
